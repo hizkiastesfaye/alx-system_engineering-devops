@@ -1,3 +1,3 @@
-[image of distributed](https://github.com/MA-Abahmane/alx-system_engineering-devops/blob/master/0x09-web_infrastructure_design/1-distributed_web_infrastructure.png?raw=true)
+[image of distributed](1-distributed_web_infrastructure.png)
 
 #distributed file is donnee...
