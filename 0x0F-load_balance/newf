@@ -1,0 +1,35 @@
+Welcome to Ubuntu 20.04.5 LTS (GNU/Linux 5.15.0-1021-aws x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Sun Dec 10 13:15:10 UTC 2023
+
+  System load:  0.0                Processes:             102
+  Usage of /:   12.4% of 19.20GB   Users logged in:       0
+  Memory usage: 28%                IPv4 address for eth0: 10.247.145.124
+  Swap usage:   0%
+
+ * Ubuntu Pro delivers the most comprehensive open source security and
+   compliance features.
+
+   https://ubuntu.com/aws/pro
+
+80 updates can be applied immediately.
+1 of these updates is a standard security update.
+To see these additional updates run: apt list --upgradable
+
+New release '22.04.3 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+
+1 updates could not be installed automatically. For more details,
+see /var/log/unattended-upgrades/unattended-upgrades.log
+
+*** System restart required ***
+Last login: Sun Dec 10 12:58:09 2023 from 196.191.61.123
+]0;ubuntu@207946-web-02: ~[01;32mubuntu@207946-web-02[00m:[01;34m~[00m$ ^C
+]0;ubuntu@207946-web-02: ~[01;32mubuntu@207946-web-02[00m:[01;34m~[00m$ ^C
+]0;ubuntu@207946-web-02: ~[01;32mubuntu@207946-web-02[00m:[01;34m~[00m$ q^C
+]0;ubuntu@207946-web-02: ~[01;32mubuntu@207946-web-02[00m:[01;34m~[00m$ logout
