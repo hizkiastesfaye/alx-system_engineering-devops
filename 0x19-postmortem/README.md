@@ -1,64 +1,28 @@
-# Postmortem
+Issue Summary:
+- Duration: The outage occurred from 9:00 AM to 11:30 AM (UTC+2).
+- Impact: The service affected was the banking transaction processing system. Users experienced delays in processing transactions, and approximately 20% of users were affected by the slowdown.
+- Root Cause: The root cause of the issue was identified as a database connectivity problem resulting from a network infrastructure misconfiguration.
 
-Upon the release of ALX's System Engineering & DevOps project 0x19,
-Ubuntu 14.04 container running an Apache web server. GET requests on the server led to
-`500 Internal Server Error`'s, when the expected response was an HTML file defining a
-simple Holberton WordPress site.
+Timeline:
+- 9:00 AM: The issue was detected when an engineer noticed a significant increase in transaction processing time.
+- Actions Taken: The database, network, and server components were investigated to identify the cause of the slow transaction processing. Initially, the assumption was made that the issue might be related to high server load.
+- Misleading Investigation/Debugging Paths: The investigation initially focused on server performance optimization, leading to a suboptimal allocation of resources and time.
+- Escalation: The incident was escalated to the Database Operations team and the Network Infrastructure team for further investigation and resolution.
+- Incident Resolution: The incident was resolved by identifying a misconfiguration in the network infrastructure, specifically a firewall rule that was blocking database connections. Once the misconfiguration was corrected, normal transaction processing was restored.
 
-## Debugging Process
+Root Cause and Resolution:
+- Root Cause: The issue was caused by a misconfigured firewall rule that was blocking database connections. This misconfiguration prevented the transaction processing system from establishing a connection to the database.
+- Resolution: The misconfiguration was identified and rectified by updating the firewall rule to allow proper database connectivity. This ensured that the transaction processing system could establish the necessary connections to the database and resume normal operations.
 
-Bug debugger Brennan (BDB... as in my actual initials... made that up on the spot, pretty
-good, huh?) encountered the issue upon opening the project and being, well, instructed to
-address it, roughly 19:20 PST. He promptly proceeded to undergo solving the problem.
+Corrective and Preventative Measures:
+- Improvements/Fixes: 
+  1. Enhance network infrastructure configuration review processes to avoid similar misconfigurations in the future.
+  2. Implement regular network infrastructure audits to identify and rectify any potential misconfigurations proactively.
+  3. Strengthen monitoring capabilities to quickly detect and alert on network connectivity issues.
 
-1. Checked running processes using `ps aux`. Two `apache2` processes - `root` and `www-data` -
-were properly running.
+- Tasks to Address the Issue:
+  1. Conduct a thorough review of firewall rules to ensure proper configuration and alignment with the required connectivity.
+  2. Develop and implement automated network configuration checks to identify and flag potential misconfigurations.
+  3. Establish a proactive monitoring system to detect and alert on any anomalies in database connectivity.
 
-2. Looked in the `sites-available` folder of the `/etc/apache2/` directory. Determined that
-the web server was serving content located in `/var/www/html/`.
-
-3. In one terminal, ran `strace` on the PID of the `root` Apache process. In another, curled
-the server. Expected great things... only to be disappointed. `strace` gave no useful
-information.
-
-4. Repeated step 3, except on the PID of the `www-data` process. Kept expectations lower this
-time... but was rewarded! `strace` revelead an `-1 ENOENT (No such file or directory)` error
-occurring upon an attempt to access the file `/var/www/html/wp-includes/class-wp-locale.phpp`.
-
-5. Looked through files in the `/var/www/html/` directory one-by-one, using Vim pattern
-matching to try and locate the erroneous `.phpp` file extension. Located it in the
-`wp-settings.php` file. (Line 137, `require_once( ABSPATH . WPINC . '/class-wp-locale.php' );`).
-
-6. Removed the trailing `p` from the line.
-
-7. Tested another `curl` on the server. 200 A-ok!
-
-8. Wrote a Puppet manifest to automate fixing of the error.
-
-## Summation
-
-In short, a typo. Gotta love'em. In full, the WordPress app was encountering a critical
-error in `wp-settings.php` when tyring to load the file `class-wp-locale.phpp`. The correct
-file name, located in the `wp-content` directory of the application folder, was
-`class-wp-locale.php`.
-
-Patch involved a simple fix on the typo, removing the trailing `p`.
-
-## Prevention
-
-This outage was not a web server error, but an application error. To prevent such outages
-moving forward, please keep the following in mind.
-
-* Test! Test test test. Test the application before deploying. This error would have arisen
-and could have been addressed earlier had the app been tested.
-
-* Status monitoring. Enable some uptime-monitoring service such as
-[UptimeRobot](./https://uptimerobot.com/) to alert instantly upon outage of the website.
-
-Note that in response to this error, I wrote a Puppet manifest
-[0-strace_is_your_friend.pp](https://github.com/bdbaraban/holberton-system_engineering-devops/blob/master/0x17-web_stack_debugging_3/0-strace_is_your_friend.pp)
-to automate fixing of any such identitical errors should they occur in the future. The manifest
-replaces any `phpp` extensions in the file `/var/www/html/wp-settings.php` with `php`.
-
-But of course, it will never occur again, because we're programmers, and we never make
-errors! :wink:
+In conclusion, the outage in the banking transaction processing system was caused by a misconfigured firewall rule that blocked database connections. The incident was resolved by correcting the misconfiguration. To prevent similar incidents in the future, improvements in network infrastructure configuration, regular audits, and enhanced monitoring capabilities are recommended. Specific tasks, such as reviewing firewall rules and implementing automated checks, should be undertaken to address the issue effectively.
